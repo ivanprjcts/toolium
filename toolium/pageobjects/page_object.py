@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import urlparse
+
 from toolium.driver_wrapper import DriverWrappersPool
 from toolium.pageobjects.common_object import CommonObject
 
@@ -25,6 +27,8 @@ class PageObject(CommonObject):
 
     :type app_strings: str
     """
+    PAGE_ID = None
+    PAGE_URL_PATHS = []
 
     def __init__(self, driver_wrapper=None):
         """Initialize page object properties and update their page elements
@@ -37,6 +41,23 @@ class PageObject(CommonObject):
         self.app_strings = self.driver_wrapper.app_strings  #: mobile application strings
         self.init_page_elements()
         self._update_page_elements()
+
+    @classmethod
+    def in_page(cls, driver):
+        """True if driver is in page. Otherwise, False
+
+        :param driver: driver instance
+        :return: boolean
+        """
+        if hasattr(cls, "PAGE_URL_PATHS"):
+            parsed_current_url = urlparse.urlparse(driver.current_url)
+            return parsed_current_url.path in cls.PAGE_URL_PATHS
+        elif hasattr(cls, "PAGE_ID"):
+            html_id = driver.find_element_by_xpath("/html").get_attribute("id")
+            return html_id == cls.PAGE_ID
+        else:
+            return False
+
 
     def reset_object(self):
         """Reset web element object in all page elements"""
