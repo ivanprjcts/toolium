@@ -50,6 +50,7 @@ class PageElement(CommonObject):
 
     def reset_object(self):
         """Initialize web element object"""
+        self.driver_wrapper = DriverWrappersPool.get_default_wrapper()  #: driver wrapper instance
         self._web_element = None
 
     @property

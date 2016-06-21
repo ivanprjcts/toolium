@@ -23,6 +23,7 @@ from toolium.config_files import ConfigFiles
 from toolium.driver_wrapper import DriverWrappersPool
 from toolium.jira import add_jira_status, change_all_jira_status, save_jira_conf
 from toolium.visual_test import VisualTest
+from toolium import config_auto_loader
 
 
 def before_all(context):
@@ -31,6 +32,7 @@ def before_all(context):
     :param context: behave context
     """
     create_and_configure_wrapper(context)
+    page_object_autoloader_init(context)
 
 
 def before_scenario(context, scenario):
@@ -40,6 +42,36 @@ def before_scenario(context, scenario):
     :param scenario: running scenario
     """
     bdd_common_before_scenario(context, scenario)
+
+
+def page_object_autoloader_init(context_or_world):
+    """
+    Run all environment operations related with the PageObjects auto-generation process from YAML file.
+        - Loads PageObjects definition from YAML file and creates the given PageObjects based on those specs.
+        - Sets in the context environment a new function to get a PageObject loaded by its name.
+    :param context_or_world: behave context or lettuce world
+    :return: None
+        Context variables added:
+            - context.page_object_list_autoloaded: (list) PageObjectAutoloaded list
+            - context.get_page_object(page_object_name): (function) to retrieve a PageObject by its name
+    """
+
+    config = context_or_world.driver_wrapper.config
+    if config.getboolean_optional("PageObjectsAutoloader", "enabled", False):
+        context_or_world.logger.info("PageObject Autoloader enabled. Trying to pre-load the object ...")
+
+        yaml_file = config.get_optional("PageObjectsAutoloader",
+                                        "yaml_file_path",
+                                        "resources/page_object_definition.yaml")
+        context_or_world.logger.debug("YAML file path to be loaded: '%s'", yaml_file)
+
+        page_object_definition = config_auto_loader.load_page_object_definition(yaml_file)
+        context_or_world.page_object_list_autoloaded = config_auto_loader.create_page_objects(page_object_definition)
+
+        def get_page_object(page_object_name):
+            config_auto_loader.get_page_object(context_or_world.page_object_list_autoloaded, page_object_name)
+
+        context_or_world.get_page_object = get_page_object
 
 
 def bdd_common_before_scenario(context_or_world, scenario):
@@ -134,6 +166,7 @@ def after_scenario(context, scenario):
     :param scenario: running scenario
     """
     bdd_common_after_scenario(context, scenario, scenario.status)
+    reset_autoloaded_page_object()
 
 
 def bdd_common_after_scenario(context_or_world, scenario, status):
@@ -167,6 +200,17 @@ def bdd_common_after_scenario(context_or_world, scenario, status):
 
     # Save test status to be updated later
     add_jira_status(get_jira_key_from_scenario(scenario), test_status, test_comment)
+
+
+def reset_autoloaded_page_object(context):
+    """
+    Resets all page object instances loaded from specification file.
+    :return: None
+    """
+
+    if context.driver_wrapper.config.config.getboolean_optional("PageObjectsAutoloader", "enabled", False):
+        for page_object in context.page_object_list_autoloaded:
+            page_object.reset_object()
 
 
 def get_jira_key_from_scenario(scenario):
