@@ -42,15 +42,16 @@ class PageObjectAutoloaded(PageObject):
         # Name to identify the auto-loaded PageObject.
         self.name = None
 
-    def wait_until_loaded(self):
+    def wait_until_loaded(self, timeout=10):
         """
         Wait until page is loaded using the auto-loaded information.
+        :param timeout: max time to wait
         :returns: this page object instance
         """
 
         for page_element in super(PageObjectAutoloaded, self)._get_page_elements():
             if page_element.if_wait:
                 self.logger.debug("Waiting for element loaded: %s", page_element)
-                page_element.wait_until_visible()
+                page_element.wait_until_visible(timeout=timeout)
 
         return self

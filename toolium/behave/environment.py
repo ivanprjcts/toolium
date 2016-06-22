@@ -69,7 +69,7 @@ def page_object_autoloader_init(context_or_world):
         context_or_world.page_object_list_autoloaded = config_auto_loader.create_page_objects(page_object_definition)
 
         def get_page_object(page_object_name):
-            config_auto_loader.get_page_object(context_or_world.page_object_list_autoloaded, page_object_name)
+            return config_auto_loader.get_page_object(context_or_world.page_object_list_autoloaded, page_object_name)
 
         context_or_world.get_page_object = get_page_object
 
@@ -166,7 +166,7 @@ def after_scenario(context, scenario):
     :param scenario: running scenario
     """
     bdd_common_after_scenario(context, scenario, scenario.status)
-    reset_autoloaded_page_object()
+    reset_autoloaded_page_object(context)
 
 
 def bdd_common_after_scenario(context_or_world, scenario, status):
@@ -208,7 +208,7 @@ def reset_autoloaded_page_object(context):
     :return: None
     """
 
-    if context.driver_wrapper.config.config.getboolean_optional("PageObjectsAutoloader", "enabled", False):
+    if context.driver_wrapper.config.getboolean_optional("PageObjectsAutoloader", "enabled", False):
         for page_object in context.page_object_list_autoloaded:
             page_object.reset_object()
 

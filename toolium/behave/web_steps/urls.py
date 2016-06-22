@@ -39,7 +39,7 @@ def navigate_to_url(context, url, resource):
 def resource_page_is_loaded(context):
 
     # Check if certain elements of the new PageObject are loaded
-    context.page.wait_until_loaded(context, context.page)
+    context.page.wait_until_loaded()
 
 
 @step(u'the "{resource}" page is loaded')
@@ -48,7 +48,7 @@ def resource_page_is_loaded(context, resource):
     context.page = context.get_page_object(resource)
 
     # Check if certain elements of the new PageObject are loaded
-    context.page.wait_until_loaded(context, context.page)
+    context.page.wait_until_loaded()
 
 
 @step(u'I wait {seconds} seconds')

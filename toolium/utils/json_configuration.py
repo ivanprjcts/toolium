@@ -68,18 +68,21 @@ def load_lang_properties(lang, lang_dir):
     """
 
     __logger__.info("Loading all language files from '%s'. Language: '%s'", lang_dir, lang)
-    file_list = [join(lang_dir, f) for f in listdir(lang_dir) if isfile(join(lang_dir, f)) and
-                 f.startswith("{}_".format(lang))]
-    __logger__.debug("Language properties file list: '%s'", file_list)
+    if isfile(lang_dir):
+        file_list = [join(lang_dir, f) for f in listdir(lang_dir) if isfile(join(lang_dir, f)) and
+                     f.startswith("{}_".format(lang))]
+        __logger__.debug("Language properties file list: '%s'", file_list)
 
-    global language_props
+        global language_props
 
-    language_props = SafeConfigParser()
-    for file in file_list:
-        # Open the file with the correct encoding
-        with codecs.open(file, 'r', encoding='utf-8') as f:
-            language_props.readfp(f)
-    __logger__.debug("Language properties loaded for: '%s'", language_props.sections())
+        language_props = SafeConfigParser()
+        for file in file_list:
+            # Open the file with the correct encoding
+            with codecs.open(file, 'r', encoding='utf-8') as f:
+                language_props.readfp(f)
+        __logger__.debug("Language properties loaded for: '%s'", language_props.sections())
+    else:
+        __logger__.warn("Dir with language property files not found.")
 
 
 def get_values_of_lang_section(section):
