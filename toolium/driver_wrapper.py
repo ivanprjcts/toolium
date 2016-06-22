@@ -23,7 +23,7 @@ from toolium.config_driver import ConfigDriver
 from toolium.config_files import ConfigFiles
 from toolium.config_parser import ExtendedConfigParser
 from toolium.driver_wrappers_pool import DriverWrappersPool
-from toolium.utils import Utils
+from toolium.utils.selenium_utils import Utils
 
 
 class DriverWrapper(object):

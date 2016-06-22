@@ -43,17 +43,17 @@ def _init_logger():
     __logger__ = logging.getLogger(__name__) if __logger__ is None else __logger__
 
 
-def add_attributes_to_page_object(page_element_list, page_object):
+def add_attributes_to_page_object(page_element, page_object):
     """
     Adds to the given page object the defined page elements using the PAGE_ELEMENT_CREATION_PATTERN.
-    :param page_element_list: (dict) Page elements list loaded from YAML definition.
+    :param page_element: (dict) Page element loaded from YAML definition.
     :param page_object: (Toolium PageObjectAutoLoaded) PageObject where PageElements are created as attributes
     :return: None
     """
 
-    for page_element_name in page_element_list:
+    for page_element_name in page_element:
         __logger__.debug("Creating element in PageObject '%s'", page_element_name)
-        page_element_details = page_element_list[page_element_name]
+        page_element_details = page_element[page_element_name]
 
         exec_string = PAGE_ELEMENT_CREATION_PATTERN.format(att_name=page_element_details['Name'],
                                                            page_element_name=page_element_name,
