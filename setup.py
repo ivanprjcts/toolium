@@ -44,7 +44,7 @@ setup(
     name='toolium-11paths',
     version=read_file('VERSION').strip(),
     packages=['toolium', 'toolium.utils', 'toolium.pageobjects', 'toolium.pageelements', 'toolium.lettuce',
-              'toolium.behave'],
+              'toolium.behave', 'toolium.behave.web_steps'],
     package_data={'': ['resources/VisualTestsTemplate.html']},
     install_requires=read_file('requirements.txt').splitlines(),
     tests_require=read_file('requirements_dev.txt').splitlines(),
