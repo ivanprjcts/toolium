@@ -2,4 +2,6 @@ requests>=2.9.1             # api tests
 selenium>=2.53.1            # web tests
 Appium-Python-Client>=0.22  # mobile tests
 six>=1.10.0
+PyYAML>=3.11
+behave>=1.2.5
 urllib3 >= 1.10

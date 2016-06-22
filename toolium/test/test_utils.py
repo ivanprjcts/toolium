@@ -33,7 +33,7 @@ from toolium.config_files import ConfigFiles
 from toolium.driver_wrapper import DriverWrapper
 from toolium.driver_wrappers_pool import DriverWrappersPool
 from toolium.pageelements.page_element import PageElement
-from toolium.utils import Utils
+from toolium.utils.selenium_utils import Utils
 
 navigation_bar_tests = (
     ('android', 'C:/Demo.apk', None, 0),

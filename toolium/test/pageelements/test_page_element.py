@@ -19,7 +19,7 @@ limitations under the License.
 import unittest
 
 import mock
-from nose.tools import assert_equal, assert_is_not_none, assert_is_none, assert_raises, assert_in
+from nose.tools import assert_equal, assert_is_not_none, assert_is_none, assert_raises, assert_in, assert_not_equal
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -94,6 +94,39 @@ class TestPageElement(unittest.TestCase):
         # Check that only first language is reset
         assert_is_none(login_page.language._web_element)
         assert_is_not_none(second_login_page.language._web_element)
+
+    def test_reset_object_new_driver(self):
+        """
+        Tests whether the new driver is loaded when the object is reset (same instance) and previous driver is closed.
+        """
+        login_page = RegisterPageObject()
+        login_page.username.web_element
+
+        # Check that web elements are filled
+        assert_is_not_none(login_page.username._web_element)
+
+        driver_before_reset = login_page.username.driver
+        DriverWrappersPool.close_drivers_and_download_videos("test")
+        login_page.username.reset_object()
+        driver_after_reset = login_page.username.driver
+
+        assert_not_equal(driver_before_reset, driver_after_reset)
+
+    def test_reset_object_same_driver(self):
+        """
+        Tests whether the new driver is the same when reusing instances and previous driver is not closed.
+        """
+        login_page = RegisterPageObject()
+        login_page.username.web_element
+
+        # Check that web elements are filled
+        assert_is_not_none(login_page.username._web_element)
+
+        driver_before_reset = login_page.username.driver
+        login_page.username.reset_object()
+        driver_after_reset = login_page.username.driver
+
+        assert_equal(driver_before_reset, driver_after_reset)
 
     def test_get_web_element(self):
         RegisterPageObject().username.web_element

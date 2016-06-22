@@ -38,9 +38,13 @@ class PageObject(CommonObject):
         self.init_page_elements()
         self._update_page_elements()
 
-    def reset_object(self):
-        """Reset web element object in all page elements"""
+    def reset_object(self, driver_wrapper=None):
+        """Reset web element object in all page elements
+        :param driver_wrapper: driver wrapper instance
+        """
         self.app_strings = self.driver_wrapper.app_strings
+        self.driver_wrapper = driver_wrapper if driver_wrapper else \
+            DriverWrappersPool.get_default_wrapper()  #: driver wrapper instance
         for element in self._get_page_elements():
             element.reset_object()
 
