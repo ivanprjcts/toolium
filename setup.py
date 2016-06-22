@@ -41,16 +41,17 @@ def get_long_description():
 
 
 setup(
-    name='toolium',
+    name='toolium-11paths',
     version=read_file('VERSION').strip(),
-    packages=['toolium', 'toolium.pageobjects', 'toolium.pageelements', 'toolium.lettuce', 'toolium.behave'],
+    packages=['toolium', 'toolium.utils', 'toolium.pageobjects', 'toolium.pageelements', 'toolium.lettuce',
+              'toolium.behave'],
     package_data={'': ['resources/VisualTestsTemplate.html']},
     install_requires=read_file('requirements.txt').splitlines(),
     tests_require=read_file('requirements_dev.txt').splitlines(),
     test_suite='toolium.test',
-    author='Rubén González Alonso, Telefónica I+D',
-    author_email='ruben.gonzalezalonso@telefonica.com',
-    url='https://github.com/telefonica/toolium',
+    author='Rubén González Alonso, Telefónica I+D; ElevenPaths QA Team, Telefónica Digital',
+    author_email='ruben.gonzalezalonso@telefonica.com; qateam@11paths.com',
+    url='https://github.com/telefonica/toolium; https://github.com/ElevenPaths/toolium',
     description='Wrapper tool of Selenium and Appium libraries to test web and mobile applications in a single project',
     long_description=get_long_description(),
     keywords=['selenium', 'appium', 'webdriver', 'web automation', 'mobile automation', 'page object',
